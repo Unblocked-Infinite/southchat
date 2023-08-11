@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}South Chat{% endblock %}</title>
+    <script 
+        type="text/javascript"
+        src="{{url_for('static', filename='/assets/boxicons.min.js')}}"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/style.css')}}">
+</head>
+<body>
+    <header>
+        <div class="logo">South Chat</div>
+        <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <nav class="nav-bar">
+            <ul>
+                <li>
+                    <a href="/" class="{% block home %}{% endblock %}">Home</a>
+                </li>
+                <li>
+                    <a href="/rooms" class="{% block rooms %}{% endblock %}">Rooms</a>
+                </li>
+                <li>
+                    <a href="/join" class="{% block join %}{% endblock %}">Join</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        {% if category == 'error' %}
+            <div id="toastBox">
+                <div class="toast">
+                    <box-icon name='x-circle' type='solid' color='#ff0000' ></box-icon>{{ message }}
+                </div>
+                <script>
+                    setTimeout(() => {
+                        toast = document.querySelector(".toast");
+                        toast.remove();
+                    }, 5000)
+                </script>
+            </div>
+        {% else %}
+            <div id="toastBox">
+                <div class="toast1">
+                    <box-icon name='check-circle' type='solid' color='#08a308' ></box-icon>{{ message }}
+                </div>
+                <script>
+                    setTimeout(() => {
+                        toast = document.querySelector(".toast1");
+                        toast.remove();
+                    }, 2000)
+                </script>
+            </div>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script 
+        type="text/javascript"
+        src="{{url_for('static', filename='/js/index.js')}}"
+    ></script>
+</body>
+</html>

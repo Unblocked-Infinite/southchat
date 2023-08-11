@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}South Chat | Rooms{% endblock %}
+{% block home %}{% endblock %}
+{% block rooms %}active{% endblock %}
+{% block join %}{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <main class="table">
+        <section class="table_header">
+            <table>
+                <thead>
+                    <tr>
+                        <th> All Chat Rooms</th>
+                    </tr>
+                </thead>
+            </table>
+        </section>
+        <section class="table_body">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Code </th>
+                        <th> Online Users </th>
+                        <th> Messages </th>
+                        <th> Link </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for room in rooms %}
+                    <tr>
+                        <td>{{ room }}</td>
+                        <td>{{ rooms[room]['members'] }} Users</td>
+                        <td>{{ rooms[room]['messages']|length }}</td>
+                        <td>
+                            <a href="/join?code={{ room }}">Here</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+{% endblock %}

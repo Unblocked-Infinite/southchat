@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}South Chat | {{room}}{% endblock %}
+{% block home %}{% endblock %}
+{% block rooms %}active{% endblock %}
+{% block join %}{% endblock %}
+
+{% block content %}
+<div class="fake-body">
+    <div class="room-container">
+        <div class="header">
+            <h1>South Chat | Code: {{ code }}</h1>
+        </div>
+        <div class="body" id="body">
+        </div>
+        <div class="footer">
+            <form id="Form">
+                <input type="text" id="message" name="message" placeholder="Type Something..." autocomplete="off">
+                <button type="submit" name="send" onclick="sendMessage()">Send</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //Fix Form
+    const form = document.getElementById('Form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+        });
+
+
+    var socketio = io();
+
+    const scrollableDiv = document.getElementById("body");
+
+    function scrollToBottom() {
+        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+    }
+
+    const messages = document.getElementById("body");
+    const createMessage = (name, msg) => {
+        const message = document.createElement("p");
+        message.classList.add("message");
+        
+        if (name == '{{name}}') {
+            message.classList.add("user_message");
+            message.textContent = msg;
+        } else {
+            const strongName = document.createElement("strong");
+            strongName.textContent = name;
+            
+            const textMsg = document.createTextNode(`: ${msg}`);
+            
+            message.appendChild(strongName);
+            message.appendChild(textMsg);
+        }
+        
+        messages.appendChild(message);
+        scrollToBottom()
+    };
+
+    socketio.on("message", (data) => {
+        createMessage(data.name, data.message);
+    })
+
+    const sendMessage = () => {
+        const message = document.getElementById("message");
+        if (message.value == "") return;
+        socketio.emit("message", {data: message.value});
+        message.value = "";
+    }
+</script>
+
+{% for msg in messages %}
+<script type="text/javascript">
+    createMessage("{{msg.name}}", "{{msg.message}}")
+</script>
+{% endfor %}
+{% endblock %}
