@@ -8,7 +8,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "SouthChatterBox"
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='gevent')
 
 rooms = {}
 active_sessions = {}
@@ -176,4 +176,4 @@ def receive_iframe_content(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)
